@@ -21,6 +21,8 @@ def main():
 
     for filename in os.listdir(directory):
         file_path = os.path.join(directory, filename)
+        if os.path.isdir(file_path):
+            continue  # Ignore directories if you want to do some additional organization
         username = filename.split(" ")[0].split(".")[0].lower()
         print(f"{filename} belongs to {username}")
         assignment.make_submission(username, file_path)

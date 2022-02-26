@@ -1,3 +1,4 @@
+import sys
 from typing import Dict, BinaryIO
 
 import requests
@@ -53,7 +54,11 @@ class AutolabAssignment:
     def make_submission(self, student_username: str, file_location: str, note=""):
         assert self.is_loaded, "Assignment hasn't been loaded. You must call load_data() before making submissions!"
 
-        uid: str = self.user_id_map[student_username]
+        try:
+            uid: str = self.user_id_map[student_username]
+        except KeyError:
+            print(f"ERROR: {student_username} is not a valid username in this course. Halting.")
+            sys.exit(1)
         print(f"Making submission for {student_username} with ID {uid} -> {file_location}")
 
         files: Dict[str, BinaryIO] = {"submission[file]": open(file_location, "rb")}
