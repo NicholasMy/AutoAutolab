@@ -51,6 +51,10 @@ class AutolabAssignment:
     def __str__(self):
         return f"Assignment ID {self.assignment_id} ({self.url}) {self.user_id_map}"
 
+    # Returns true if the username is valid for this course
+    def check_username(self, username: str) -> bool:
+        return username in self.user_id_map
+
     def make_submission(self, student_username: str, file_location: str, note=""):
         assert self.is_loaded, "Assignment hasn't been loaded. You must call load_data() before making submissions!"
 
