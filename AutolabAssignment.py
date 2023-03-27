@@ -66,7 +66,7 @@ class AutolabAssignment:
             print(f"Submission failed!\n{student_username} is not a valid username in this course.\n")
             new_username = input("Please enter a valid username for this submission: ")
             print("\n" + ("-" * 30))
-            AutolabAssignment.make_submission(self, new_username, file_location, note)
+            self.make_submission(new_username, file_location, note)
             return
 
         files: Dict[str, BinaryIO] = {"submission[file]": open(file_location, "rb")}
