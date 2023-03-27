@@ -58,12 +58,16 @@ class AutolabAssignment:
     def make_submission(self, student_username: str, file_location: str, note=""):
         assert self.is_loaded, "Assignment hasn't been loaded. You must call load_data() before making submissions!"
 
+        print(f"\nAttempting to make a submission for {student_username} using {file_location}")
+
         try:
             uid: str = self.user_id_map[student_username]
         except KeyError:
-            print(f"ERROR: {student_username} is not a valid username in this course. Halting.")
-            sys.exit(1)
-        print(f"Making submission for {student_username} with ID {uid} -> {file_location}")
+            print(f"Submission failed!\n{student_username} is not a valid username in this course.\n")
+            new_username = input("Please enter a valid username for this submission: ")
+            print("\n" + ("-" * 30))
+            AutolabAssignment.make_submission(self, new_username, file_location, note)
+            return
 
         files: Dict[str, BinaryIO] = {"submission[file]": open(file_location, "rb")}
 
@@ -82,4 +86,4 @@ class AutolabAssignment:
         post_url: str = self.url[:-4]  # Remove the "/new" from the url because the POST location doesn't have it
         response = requests.post(post_url, cookies=get_cookies(), files=files, data=form_values)
         assert response.status_code == 200, f"{response.content}\n\nSubmission failed."
-        print("Submission successful!")
+        print("Submission successful!\n")
