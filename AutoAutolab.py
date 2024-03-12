@@ -16,7 +16,7 @@ def main():
 
     course =    input("Please enter the course you are working with (ex. CSE116-s23): ")
     submit_to = input("Please enter the (unique) assignment name (ex. classes2)     : ")
-    assignment = AutolabAssignment(f"https://autograder.cse.buffalo.edu/courses/{course}/assessments/{submit_to}/submissions/new")
+    assignment = AutolabAssignment(f"https://autolab.cse.buffalo.edu/courses/{course}/assessments/{submit_to}/submissions/new")
     assignment.load_data()
 
     directory = "data"

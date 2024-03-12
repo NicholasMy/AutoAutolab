@@ -1,4 +1,6 @@
-import sys
+import base64
+import json
+import re
 from typing import Dict, BinaryIO
 
 import requests
@@ -25,16 +27,27 @@ class AutolabAssignment:
         assert response.status_code == 200, "GET request unsuccessful. Are your authentication secrets set properly in secrets.py?"
         body: bytes = response.content
         soup: BeautifulSoup = BeautifulSoup(body, "html.parser")
-        options = soup.find("select", {"name": "submission[course_user_datum_id]"})
+        scripts = soup.find_all("script")
+        script_identifier_string = ("/* requires @usersEncoded and @users to be set, i.e. via "
+                                    "Course.get_autocomplete_data */")
+
+        for script in scripts:
+            if script.text and script_identifier_string in script.text:
+                match_str: str = re.findall("const userData = ({.*});", script.text, re.S)[0]
+                match_json: str = match_str.replace(",\n    }", "}")  # Remove the invalid trailing comma
+                match_dict: dict = json.loads(match_json)
+                options: dict[str, str] = {base64.b64decode(k).decode(): v for k, v in match_dict.items()}
+                # Options is a dict with keys like "Student1 One (student1@buffalo.edu)" and values like "1234"
+                break  # Don't look for more scripts once we found this one
+
+        assert options is not None, "options is none - couldn't find course roster"
 
         # Handle mapping username to uid
         self.user_id_map = {}
 
-        for op in options.findAll("option"):
-            if op["value"]:
-                uid: str = op["value"]
-                username: str = op.text.split(secrets.EMAIL_ADDRESS_ENDING)[0].split("(")[-1]
-                self.user_id_map[username] = uid
+        for disp_name, uid in options.items():
+            username: str = disp_name.split(secrets.EMAIL_ADDRESS_ENDING)[0].split("(")[-1]
+            self.user_id_map[username] = uid
 
         # Get the assignment ID
         assignment_id_element = soup.find("input", {"name": "submission[assessment_id]"})
