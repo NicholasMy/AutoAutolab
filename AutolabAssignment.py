@@ -44,9 +44,14 @@ class AutolabAssignment:
 
         # Handle mapping username to uid
         self.user_id_map = {}
+        # Capture username from the text within parentheses
+        usrname_pat = re.compile(r"\(([^)]+)\)")
 
         for disp_name, uid in options.items():
-            username: str = disp_name.split(secrets.EMAIL_ADDRESS_ENDING)[0].split("(")[-1]
+            m = usrname_pat.search(disp_name)
+            if not m:
+                continue
+            username = m.group(1).strip()
             self.user_id_map[username] = uid
 
         # Get the assignment ID
@@ -94,7 +99,7 @@ class AutolabAssignment:
             "submission[tweak_attributes][kind]": "points",
             "submission[tweak_attributes][value]": "",
             "utf8": "✓"
-        }
+        } 
 
         post_url: str = self.url[:-4]  # Remove the "/new" from the url because the POST location doesn't have it
         response = requests.post(post_url, cookies=get_cookies(), files=files, data=form_values)
