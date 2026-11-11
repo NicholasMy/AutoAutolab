@@ -12,11 +12,14 @@ def main():
     # assignment.make_submission("student2", "data/PDF B.pdf")
     # assignment.make_submission("student3", "data/PDF C.pdf", "here's a note")
 
-    # Sample usage for bulk uploads from the "data" directory where the file name starts with the student's username followed by a space
+    # Sample usage for bulk uploads from the "data" directory where the file name
+    # starts with the student's username followed by a space
 
-    course =    input("Please enter the course you are working with (ex. CSE116-s23): ")
+    course = input("Please enter the course you are working with (ex. CSE116-s23): ")
     submit_to = input("Please enter the (unique) assignment name (ex. classes2)     : ")
-    assignment = AutolabAssignment(f"https://autolab.cse.buffalo.edu/courses/{course}/assessments/{submit_to}/submissions/new")
+    assignment = AutolabAssignment(
+        f"https://autolab.cse.buffalo.edu/courses/{course}/assessments/{submit_to}/submissions/new"
+    )
     assignment.load_data()
 
     directory = "data"
@@ -32,5 +35,5 @@ def main():
     print("\nDone!")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
