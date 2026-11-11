@@ -1,2 +1,7 @@
 data/*
 secrets.py
+.venv/
+__pycache__/
+uv.lock
+.python-version
+.DS_Store

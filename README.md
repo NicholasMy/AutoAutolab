@@ -5,13 +5,24 @@ Instructors can save **hours** of time by automatically uploading student submis
 
 No more uploading hundreds of assignments individually by hand and waiting for the page to load each time! No more scrolling through a massive list of students only to choose the wrong one!
 
+## Setup
+
+Requires [uv](https://docs.astral.sh/uv/).
+
+```sh
+uv sync                  # install dependencies into .venv
+uv run AutoAutolab.py    # run the bulk uploader
+```
+
 ## It's easy to get started!
 
 1. Load `secrets.py` with your Autolab session cookie and university email suffix.
 
 2. Create an assignment with the Autolab submission URL (not the assignment URL). You can find this by navigating to an assignment, then `Admin Options` > `Manage Submissions` > `Create new submission`. Ensure it matches the format below.
 ```python
-assignment = AutolabAssignment("https://autograder.cse.buffalo.edu/courses/DevUTestCourse/assessments/pdftest/submissions/new")
+assignment = AutolabAssignment(
+    "https://autograder.cse.buffalo.edu/courses/DevUTestCourse/assessments/pdftest/submissions/new"
+)
 ```
 
 3. Automatically load assignment information directly from Autolab.
